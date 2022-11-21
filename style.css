@@ -1,0 +1,47 @@
+body {
+    margin: 0px;
+    background-image: url("./img/background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.container {
+    background-color:  white;
+    min-height: 100vh;   /* vh = 높이만큼 */
+    box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+}
+
+.task__area {
+    border: solid 2px lavender;
+}
+
+.task__tabs {
+ display: flex;
+ border-bottom: solid 1px lavender;
+ position: relative;   
+}
+
+.task__tabs div{
+    padding: 1em;
+}
+
+#under__line {
+    height: 4px;
+    background-color: pink;
+    position: absolute;
+    width: 70px;
+    left: 0px;
+    top: 50px;
+    padding: 0px;
+}
+
+.task {
+    display: flex;
+    justify-content: space-between;
+    padding: 1em;
+}
+
+.task_done {
+    text-decoration: line-through red 2px; /* 밑줄 그어줌 */
+
+}
