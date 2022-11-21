@@ -137,6 +137,6 @@ function filter(e) { // 탭 클릭 이벤트 함수
     }
     render()
   } 
-  console.log(filterList)
+  console.log(filterList) //확인용 
 }
 
