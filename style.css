@@ -20,19 +20,23 @@ body {
  border-bottom: solid 1px lavender;
  position: relative;   
 }
+.task__tabs div {
+    cursor: pointer;
+}
 
 .task__tabs div{
     padding: 1em;
 }
 
 #under__line {
-    height: 4px;
+    height: 4px !important;
     background-color: pink;
     position: absolute;
     width: 70px;
     left: 0px;
     top: 50px;
     padding: 0px;
+    transition: 0.5s;
 }
 
 .task {
@@ -44,4 +48,17 @@ body {
 .task_done {
     text-decoration: line-through red 2px; /* 밑줄 그어줌 */
 
+}
+
+#task_board {
+    color: black;
+}
+
+.Btn__container Button:hover{
+    border: solid 3px red;
+}
+
+.input__area Button:hover {
+    color: black;
+    border: solid 2px red;
 }

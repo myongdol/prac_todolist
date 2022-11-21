@@ -11,8 +11,19 @@ isDone이 false 면 그대로 냅두고 true면 밑줄 생기게
 
 let taskInput = document.getElementById("task_input"); //id가  task_input인 input태그 갖고오기 (input__area 내부에 있음)
 let addButton = document.getElementById("btn_add"); // 추가버튼 갖고오기
-
+let underLine = document.getElementById("under__line") // 밑줄 긋기 위해 가져오기 
 let taskList = []; // 빈 배열... 유저의 입력값이 들어갈 예정
+
+let tabs = document.querySelectorAll(".task__tabs div") // tabs 에 있는 모든 div태그 가져오기 
+let mode = 'all';
+let filterList = [];  // 진행중 목록 관리할 빈 배열 
+
+
+for (let i = 1; i < tabs.length; i++) {
+  tabs[i].addEventListener("click", function(event){
+    filter(event)
+  });
+} // 탭들의 클릭 이벤트 
 
 addButton.addEventListener("click", addTask); // 클릭이벤트 발생시 addTask 함수 실행
 addButton.addEventListener("click", render); // 클릭이벤트 발생시 render 함수 실행
@@ -27,30 +38,37 @@ function addTask() {
   };
   taskList.push(task); // .push를 통하여 빈 배열에 값 넣어주기
   console.log(taskList);
+  render();
 }
 
 function render() {
+  let list = [];
+  if(mode == "all"){ // 어느탭 보여줄지 
+    list = taskList;
+  } else if(mode == 'ing' || mode == "finished") {
+    list = filterList
+  }
   // taskList를 보여주는 함수
   let resultHtml = "";
-  for (let i = 0; i < taskList.length; i++) {
+  for (let i = 0; i < list.length; i++) {
     // 배열 안에 있는 아이템을 꺼내기
 
-    if (taskList[i].isDone == true) {
+    if (list[i].isDone == true) {
       // isDone이 true가 되면 task_done 이라는 class가 부여되고, css가 적용되며 밑줄이 그어짐
       resultHtml += `<div class="task">
-        <div class="task_done">${taskList[i].taskContent}</div> 
+        <div class="task_done">${list[i].taskContent}</div> 
         <div>
-            <button onclick="toggleCheck('${taskList[i].id}')">확인</button>
-            <button onclick="deleteTask()">삭제</button>
+            <button onclick="toggleCheck('${list[i].id}')"><i class="fa-solid fa-check"></i>확인</button>
+            <button onclick="deleteTask('${list[i].id}')"><i class="fa-sharp fa-solid fa-trash"></i>삭제</button>
         </div>
     </div>`;
     } else {
       resultHtml += `
     <div class="task">
-    <div>${taskList[i].taskContent}</div> 
+    <div>${list[i].taskContent}</div> 
     <div class="Btn__container">
-        <button onclick="toggleCheck('${taskList[i].id}')">확인</button>
-        <button onclick="deleteTask()">삭제</button>
+        <button onclick="toggleCheck('${list[i].id}')"><i class="fa-solid fa-check"></i>확인</button>
+        <button onclick="deleteTask('${list[i].id}')"><i class="fa-sharp fa-solid fa-trash"></i>삭제</button>
     </div>
 </div>`;
     }
@@ -80,8 +98,45 @@ function randomId() {
   return "_" + Math.random().toString(36).substring(2, 9);
 }
 
-function deleteTask() {
-  resultHtml = "";
+function deleteTask(id) {
+   for(let i = 0; i < taskList.length; i++) {
+    if(taskList[i].id == id) { // taskList에서 i번째 id가 내가 클릭한 것의 id와 값이 같다면 삭제 
+      taskList.splice(i, 1)
+      break;
+    }
+   }
+   render()
+   // 위에서 값을 업데이트 하였기 때문에 UI도 업데이트 해야함
 }
 
-// abcd
+function filter(e) { // 탭 클릭 이벤트 함수 
+  // mode = event.target.id; // 어떤 탭을 클릭 했는지 저장 해줌.
+  // filterList = [];  // 진행중 목록 관리할 빈 배열 
+
+  if(e) { // 메뉴에서 유저가 고른 탭으로 밑줄 옮기기 
+    mode = event.target.id;
+    underLine.style.width = e.target.offsetWidth + "px";
+    underLine.style.left = e.target.offsetLeft + "px";
+    underLine.style.top = e.target.offsetTop + (e.target.offsetHeight - 4) + "px";
+  }
+  filterList = [];
+  if(mode == "all") { // 모두 보기는 그냥 렌더링해서 보여주면 끝
+    render()
+  } else if(mode == "ing") { // 진행중 이라면 
+    for(let i = 0; i < taskList.length; i++) {
+      if(taskList[i].isDone == false) { // false인 아이템들을 필터리스트에 넣기 
+        filterList.push(taskList[i])
+      }
+    } 
+    render();
+  } else if(mode == "finished") { // 완료 탭 관리
+    for (let i = 0; i < taskList.length; i++) {
+      if(taskList[i].isDone == true) {
+        filterList.push(taskList[i]);
+      }
+    }
+    render()
+  } 
+  console.log(filterList)
+}
+
